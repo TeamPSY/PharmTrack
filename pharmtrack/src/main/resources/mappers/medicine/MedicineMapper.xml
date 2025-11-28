@@ -26,7 +26,7 @@
         SELECT * FROM medicine WHERE medicine_id = #{id}
     </select>
 
-    <insert id="insert" parameterType="com.pharmt.rack.model.Medicine">
+    <insert id="insert" parameterType="com.pharm.track.model.Medicine">
         INSERT INTO medicine (category_id, name, manufacturer, price, stock, barcode, expiration_date, status)
         VALUES (#{categoryId}, #{name}, #{manufacturer}, #{price}, #{stock}, #{barcode}, #{expirationDate}, 'NORMAL')
     </insert>

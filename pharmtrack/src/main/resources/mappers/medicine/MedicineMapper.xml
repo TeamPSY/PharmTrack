@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pharm.track.mapper.MedicineMapper">
+
+    <resultMap id="MedicineMap" type="com.pharm.track.model.Medicine">
+        <id property="medicineId" column="medicine_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="name" column="name"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="barcode" column="barcode"/>
+        <result property="expirationDate" column="expiration_date"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="MedicineMap">
+        SELECT * FROM medicine
+    </select>
+
+    <select id="findById" resultMap="MedicineMap">
+        SELECT * FROM medicine WHERE medicine_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.pharmt.rack.model.Medicine">
+        INSERT INTO medicine (category_id, name, manufacturer, price, stock, barcode, expiration_date, status)
+        VALUES (#{categoryId}, #{name}, #{manufacturer}, #{price}, #{stock}, #{barcode}, #{expirationDate}, 'NORMAL')
+    </insert>
+
+    <update id="update" parameterType="com.pharm.track.model.Medicine">
+        UPDATE medicine
+        SET category_id = #{categoryId},
+            name = #{name},
+            manufacturer = #{manufacturer},
+            price = #{price},
+            stock = #{stock},
+            barcode = #{barcode},
+            expiration_date = #{expirationDate},
+            status = #{status}
+        WHERE medicine_id = #{medicineId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM medicine WHERE medicine_id = #{id}
+    </delete>
+
+</mapper>

@@ -49,7 +49,7 @@ public class MedicineController {
         return ResponseEntity.ok("수정 완료");
     }
 
-    // 삭제
+ // 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         medicineService.delete(id);

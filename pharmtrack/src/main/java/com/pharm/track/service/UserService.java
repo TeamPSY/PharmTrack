@@ -1,0 +1,47 @@
+package com.pharm.track.service;
+
+import com.pharm.track.dtos.UserDto;
+import com.pharm.track.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserMapper userMapper;
+
+    public void register(UserDto user) {
+
+        if (userMapper.findByUsername(user.getUsername()) != null) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+
+        String hashed = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashed);
+
+        userMapper.insertUser(user);
+    }
+
+    public UserDto login(String username, String password) {
+        UserDto user = userMapper.findByUsername(username);
+        if (user == null) return null;
+
+        if (!BCrypt.checkpw(password, user.getPassword())) return null;
+
+        // 비밀번호 제외 반환
+        UserDto safeUser = new UserDto();
+        safeUser.setUserId(user.getUserId());
+        safeUser.setUsername(user.getUsername());
+        safeUser.setName(user.getName());
+        safeUser.setRole(user.getRole());
+
+        return safeUser;
+    }
+
+    public UserDto findById(Long id) {
+        return userMapper.findById(id);
+    }
+}
+

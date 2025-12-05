@@ -1,11 +1,12 @@
-package com.pharm.track.model;
+package com.pharm.track.dtos;
 
 import lombok.Data;
 
 @Data
-public class User {
+public class UserDto {
     private Long userId;
     private String username;
     private String password;
-    private String name;  // 실명
+    private String name;
+    private String role;
 }

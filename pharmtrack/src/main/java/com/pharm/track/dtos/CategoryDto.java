@@ -1,5 +1,9 @@
 package com.pharm.track.dtos;
 
-public class CategoryDto {
+import lombok.Data;
 
+@Data
+public class CategoryDto {
+    private Long categoryId;
+    private String categoryName;
 }

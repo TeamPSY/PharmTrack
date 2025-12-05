@@ -6,8 +6,9 @@ import java.time.LocalDate;
 
 @Data
 public class Medicine {
-    private Long medicineId;
+	private Long medicineId;
     private Long categoryId;
+    private String categoryName;   // ⭐ 추가!
     private String name;
     private String manufacturer;
     private Integer price;

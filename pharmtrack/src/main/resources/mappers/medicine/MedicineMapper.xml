@@ -8,6 +8,7 @@
     <resultMap id="MedicineMap" type="com.pharm.track.model.Medicine">
         <id property="medicineId" column="medicine_id"/>
         <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/> <!-- ⭐ 추가 -->
         <result property="name" column="name"/>
         <result property="manufacturer" column="manufacturer"/>
         <result property="price" column="price"/>
@@ -18,22 +19,41 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
+    <!-- ⭐ 전체 조회: category_name 포함 -->
     <select id="findAll" resultMap="MedicineMap">
-        SELECT * FROM medicine
+        SELECT 
+            m.*,
+            c.category_name
+        FROM medicine m
+        LEFT JOIN medicine_category c
+            ON m.category_id = c.category_id
+        ORDER BY m.medicine_id DESC
     </select>
 
+    <!-- ⭐ ID 조회: category_name 포함 -->
     <select id="findById" resultMap="MedicineMap">
-        SELECT * FROM medicine WHERE medicine_id = #{id}
+        SELECT 
+            m.*,
+            c.category_name
+        FROM medicine m
+        LEFT JOIN medicine_category c
+            ON m.category_id = c.category_id
+        WHERE m.medicine_id = #{id}
     </select>
 
+    <!-- INSERT -->
     <insert id="insert" parameterType="com.pharm.track.model.Medicine">
-        INSERT INTO medicine (category_id, name, manufacturer, price, stock, barcode, expiration_date, status)
-        VALUES (#{categoryId}, #{name}, #{manufacturer}, #{price}, #{stock}, #{barcode}, #{expirationDate}, 'NORMAL')
+        INSERT INTO medicine 
+            (category_id, name, manufacturer, price, stock, barcode, expiration_date, status)
+        VALUES 
+            (#{categoryId}, #{name}, #{manufacturer}, #{price}, #{stock}, #{barcode}, #{expirationDate}, 'NORMAL')
     </insert>
 
+    <!-- UPDATE -->
     <update id="update" parameterType="com.pharm.track.model.Medicine">
         UPDATE medicine
-        SET category_id = #{categoryId},
+        SET 
+            category_id = #{categoryId},
             name = #{name},
             manufacturer = #{manufacturer},
             price = #{price},
@@ -44,6 +64,7 @@
         WHERE medicine_id = #{medicineId}
     </update>
 
+    <!-- DELETE -->
     <delete id="delete">
         DELETE FROM medicine WHERE medicine_id = #{id}
     </delete>

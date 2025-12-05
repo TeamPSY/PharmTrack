@@ -1,12 +1,12 @@
-package com.pharm.track.model;
+package com.pharm.track.dtos;
 
 import lombok.Data;
 
 @Data
-public class SaleItem {
+public class SaleItemResponseDto {
     private Long saleItemId;
-    private Long saleId;
     private Long medicineId;
+    private String medicineName;
     private Integer quantity;
     private Integer unitPrice;
     private Integer subtotalPrice;

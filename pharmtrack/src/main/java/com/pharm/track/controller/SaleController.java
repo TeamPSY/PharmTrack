@@ -18,15 +18,20 @@ public class SaleController {
 
     /** 🔹판매 생성 */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SaleDto saleDto) {
+    public ResponseEntity<?> createSale(@RequestBody SaleDto saleDto) {
 
-        // ⭐ React에서 로그인 후 userId를 보내줘야 함
+        // ⭐ userId는 반드시 필요 → 없으면 400 + 메시지 반환
         if (saleDto.getUserId() == null) {
-            return ResponseEntity.badRequest().body("❌ userId 누락됨 — 로그인 정보가 필요합니다.");
+            return ResponseEntity
+                    .badRequest()
+                    .body("❌ userId 누락됨 — 로그인 정보가 필요합니다.");
         }
 
+        // ⭐ createSale 내부에서 이미 재고 차감이 실행됨
         Long saleId = saleService.createSale(saleDto);
-        return ResponseEntity.ok(saleId);   // { "saleId": 3 } 이런식으로 응답됨
+
+        // 최종 응답: saleId 반환
+        return ResponseEntity.ok(saleId);
     }
 
     /** 🔹판매 상세 조회 */

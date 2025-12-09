@@ -5,18 +5,26 @@
 
 <mapper namespace="com.pharm.track.mapper.UserMapper">
 
+    <!-- UserDto 매핑 -->
     <resultMap id="UserMap" type="com.pharm.track.dtos.UserDto">
         <id property="userId" column="user_id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="name" column="name"/>
         <result property="role" column="role"/>
+        
+        <!-- 🔹추가된 필드 -->
+        <result property="phone" column="phone"/>
+        <result property="pharmacyName" column="pharmacy_name"/>
     </resultMap>
 
+
+    <!-- 회원가입 SQL 수정: phone, pharmacy_name 추가 -->
     <insert id="insertUser">
-        INSERT INTO user (username, password, name, role)
-        VALUES (#{username}, #{password}, #{name}, 'USER')
+        INSERT INTO user (username, password, name, phone, pharmacy_name, role)
+        VALUES (#{username}, #{password}, #{name}, #{phone}, #{pharmacyName}, 'USER')
     </insert>
+
 
     <select id="findByUsername" resultMap="UserMap">
         SELECT * FROM user WHERE username = #{username}

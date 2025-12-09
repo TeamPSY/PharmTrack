@@ -8,4 +8,7 @@ public class User {
     private String username;
     private String password;
     private String name;  // 실명
+    private String phone;
+    private String pharmacyName;   // 약국명
+
 }

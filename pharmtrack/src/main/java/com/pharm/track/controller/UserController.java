@@ -14,16 +14,17 @@ public class UserController {
 
     private final UserService userService;
 
+    /** 🔹 회원가입 (전화번호 + 약국명 포함) */
     @PostMapping("/register")
     public String register(@RequestBody UserDto user) {
         userService.register(user);
         return "OK";
     }
 
+    /** 🔹 로그인 */
     @PostMapping("/login")
     public UserDto login(@RequestBody UserDto loginData, HttpSession session) {
         UserDto user = userService.login(loginData.getUsername(), loginData.getPassword());
-
         if (user == null) return null;
 
         session.setAttribute("user", user.getUserId());

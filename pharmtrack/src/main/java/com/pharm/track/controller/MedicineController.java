@@ -49,10 +49,32 @@ public class MedicineController {
         return ResponseEntity.ok("수정 완료");
     }
 
- // 삭제
+    // 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         medicineService.delete(id);
         return ResponseEntity.ok("삭제 완료");
+    }
+
+    // ⭐ 유통기한 임박(7일 이내) 조회
+    @GetMapping("/expiring-soon")
+    public List<Medicine> getExpiringSoon() {
+        return medicineService.getExpiringSoon();
+    }
+
+    // ⭐ 이미 만료된 약 조회
+    @GetMapping("/expired")
+    public List<Medicine> getExpired() {
+        return medicineService.getExpired();
+    }
+
+    // ⭐ 상태 변경 API (NORMAL, LOW, ALERT, EXPIRED)
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status
+    ) {
+        medicineService.updateStatus(id, status);
+        return ResponseEntity.ok("상태 변경 완료");
     }
 }

@@ -8,7 +8,7 @@
     <resultMap id="MedicineMap" type="com.pharm.track.model.Medicine">
         <id property="medicineId" column="medicine_id"/>
         <result property="categoryId" column="category_id"/>
-        <result property="categoryName" column="category_name"/> <!-- ⭐ 추가 -->
+        <result property="categoryName" column="category_name"/>
         <result property="name" column="name"/>
         <result property="manufacturer" column="manufacturer"/>
         <result property="price" column="price"/>
@@ -19,7 +19,6 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <!-- ⭐ 전체 조회: category_name 포함 -->
     <select id="findAll" resultMap="MedicineMap">
         SELECT 
             m.*,
@@ -30,7 +29,6 @@
         ORDER BY m.medicine_id DESC
     </select>
 
-    <!-- ⭐ ID 조회: category_name 포함 -->
     <select id="findById" resultMap="MedicineMap">
         SELECT 
             m.*,
@@ -41,7 +39,6 @@
         WHERE m.medicine_id = #{id}
     </select>
 
-    <!-- INSERT -->
     <insert id="insert" parameterType="com.pharm.track.model.Medicine">
         INSERT INTO medicine 
             (category_id, name, manufacturer, price, stock, barcode, expiration_date, status)
@@ -49,7 +46,6 @@
             (#{categoryId}, #{name}, #{manufacturer}, #{price}, #{stock}, #{barcode}, #{expirationDate}, 'NORMAL')
     </insert>
 
-    <!-- UPDATE -->
     <update id="update" parameterType="com.pharm.track.model.Medicine">
         UPDATE medicine
         SET 
@@ -64,9 +60,33 @@
         WHERE medicine_id = #{medicineId}
     </update>
 
-    <!-- DELETE -->
     <delete id="delete">
         DELETE FROM medicine WHERE medicine_id = #{id}
     </delete>
+
+    <select id="findExpiringSoon" resultMap="MedicineMap">
+        SELECT 
+            m.*, c.category_name
+        FROM medicine m
+        LEFT JOIN medicine_category c
+            ON m.category_id = c.category_id
+        WHERE m.expiration_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+          AND m.status != 'EXPIRED'
+    </select>
+
+    <select id="findExpired" resultMap="MedicineMap">
+        SELECT 
+            m.*, c.category_name
+        FROM medicine m
+        LEFT JOIN medicine_category c
+            ON m.category_id = c.category_id
+        WHERE m.expiration_date **&lt;** CURDATE() ****
+    </select>
+
+    <update id="updateStatus">
+        UPDATE medicine
+        SET status = #{status}
+        WHERE medicine_id = #{id}
+    </update>
 
 </mapper>

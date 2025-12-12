@@ -49,4 +49,19 @@ public class UserService {
     public UserDto findById(Long id) {
         return userMapper.findById(id);
     }
+    
+    public UserDto getUserById(Long id) {
+        return userMapper.findById(id);
+    }
+
+    public void updateUser(Long id, UserDto dto) {
+        // 비밀번호는 null 또는 "" 이면 변경하지 않음
+        if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
+            dto.setPassword(null); // Mapper에서 null이면 SET하지 않도록 처리
+        }
+
+        dto.setUserId(id);
+        userMapper.update(dto);
+    }
+
 }

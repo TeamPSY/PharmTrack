@@ -14,7 +14,7 @@ public class UserController {
 
     private final UserService userService;
 
-    /** 🔹 회원가입 (전화번호 + 약국명 포함) */
+    /** 🔹 회원가입 */
     @PostMapping("/register")
     public String register(@RequestBody UserDto user) {
         userService.register(user);
@@ -31,13 +31,28 @@ public class UserController {
         return user;
     }
 
+    /** 🔹 로그인한 사용자 ID 가져오기 */
     @GetMapping("/me")
     public Long me(HttpSession session) {
         return (Long) session.getAttribute("user");
     }
 
+    /** 🔹 로그아웃 */
     @PostMapping("/logout")
     public void logout(HttpSession session) {
         session.invalidate();
+    }
+
+    /** 🔹 특정 회원 정보 조회 */
+    @GetMapping("/user/{id}")
+    public UserDto getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    /** 🔹 회원정보 수정 */
+    @PutMapping("/update/{id}")
+    public String updateUser(@PathVariable Long id, @RequestBody UserDto dto) {
+        userService.updateUser(id, dto);
+        return "UPDATED";
     }
 }

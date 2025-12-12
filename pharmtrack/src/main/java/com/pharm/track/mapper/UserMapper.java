@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
 
     void insertUser(UserDto user);
+    
+    void update(UserDto user);
 
     UserDto findByUsername(String username);
 

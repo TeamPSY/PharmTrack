@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pharm.track.mapper.InventoryHistoryMapper">
+
+    <resultMap id="HistoryMap" type="com.pharm.track.model.InventoryHistory">
+        <id property="historyId" column="history_id"/>
+        <result property="medicineId" column="medicine_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="changeType" column="change_type"/>
+        <result property="amount" column="amount"/>
+        <result property="beforeStock" column="before_stock"/>
+        <result property="afterStock" column="after_stock"/>
+        <result property="reason" column="reason"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 약품별 이력 조회 -->
+    <select id="findByMedicineId" resultMap="HistoryMap">
+        SELECT
+            history_id,
+            medicine_id,
+            user_id,
+            change_type,
+            amount,
+            before_stock,
+            after_stock,
+            reason,
+            created_at
+        FROM inventory_history
+        WHERE medicine_id = #{medicineId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 전체 이력 조회 -->
+    <select id="findAll" resultMap="HistoryMap">
+        SELECT
+            history_id,
+            medicine_id,
+            user_id,
+            change_type,
+            amount,
+            before_stock,
+            after_stock,
+            reason,
+            created_at
+        FROM inventory_history
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 이력 저장 -->
+    <insert id="insertHistory"
+            parameterType="com.pharm.track.model.InventoryHistory">
+        INSERT INTO inventory_history (
+            medicine_id,
+            user_id,
+            change_type,
+            amount,
+            before_stock,
+            after_stock,
+            reason,
+            created_at
+        ) VALUES (
+            #{medicineId},
+            #{userId},
+            #{changeType},
+            #{amount},
+            #{beforeStock},
+            #{afterStock},
+            #{reason},
+            NOW()
+        )
+    </insert>
+
+</mapper>

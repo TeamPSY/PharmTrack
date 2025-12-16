@@ -6,5 +6,5 @@ import lombok.Data;
 public class SaleItemDto {
     private Long medicineId;
     private Integer quantity;
-    private Integer unitPrice; // 없으면 Medicine.price 사용
+    private Integer unitprice; // 없으면 Medicine.price 사용
 }

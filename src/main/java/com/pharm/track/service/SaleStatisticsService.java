@@ -15,6 +15,7 @@ public class SaleStatisticsService {
         // TODO: 추후 Mapper 연동
         return new ArrayList<>();
     }
+    
     // 약품별 판매 통계
     public List<MedicineSalesDto> getSalesByMedicine(String startDate, String endDate) {
         // TODO: 추후 Mapper 연동

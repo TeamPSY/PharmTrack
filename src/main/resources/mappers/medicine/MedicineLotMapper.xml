@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pharm.track.mapper.MedicineLotMapper">
+
+    <!-- ResultMap: DB 컬럼 → Java 필드 정확히 매핑 -->
+    <resultMap id="LotResultMap" type="com.pharm.track.model.MedicineLot">
+        <id property="lotId" column="lot_id"/>
+        <result property="medicineId" column="medicine_id"/>
+        <result property="lotNo" column="lot_no"/>                <!-- ✅ 수정 -->
+        <result property="expiryDate" column="expiry_date"/>      <!-- ✅ 수정 -->
+        <result property="quantity" column="quantity"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 약품별 LOT 조회 -->
+    <select id="findLotsByMedicine" resultMap="LotResultMap">
+        SELECT
+            lot_id,
+            medicine_id,
+            lot_no,
+            expiry_date,
+            quantity,
+            created_at
+        FROM medicine_lot
+        WHERE medicine_id = #{medicineId}
+        ORDER BY expiry_date ASC
+    </select>
+
+    <!-- LOT 등록 -->
+    <insert id="insertLot" parameterType="com.pharm.track.model.MedicineLot">
+        INSERT INTO medicine_lot
+        (
+            medicine_id,
+            lot_no,
+            expiry_date,
+            quantity,
+            created_at
+        )
+        VALUES
+        (
+            #{medicineId},
+            #{lotNo},          <!-- ✅ 수정 -->
+            #{expiryDate},     <!-- ✅ 수정 -->
+            #{quantity},
+            NOW()
+        )
+    </insert>
+
+    <!-- FIFO용 LOT 조회 (수량 있는 것만) -->
+    <select id="findLotsForFifo" resultMap="LotResultMap">
+        SELECT
+            lot_id,
+            medicine_id,
+            lot_no,
+            expiry_date,
+            quantity,
+            created_at
+        FROM medicine_lot
+        WHERE medicine_id = #{medicineId}
+          AND quantity > 0
+        ORDER BY expiry_date ASC
+    </select>
+
+    <!-- LOT 수량 업데이트 -->
+    <update id="updateLotQuantity" parameterType="com.pharm.track.model.MedicineLot">
+        UPDATE medicine_lot
+        SET quantity = #{quantity}
+        WHERE lot_id = #{lotId}
+    </update>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pharm.track.mapper.UserMapper">
+
+    <!-- UserDto 매핑 -->
+    <resultMap id="UserMap" type="com.pharm.track.dtos.UserDto">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="role" column="role"/>
+        <result property="phone" column="phone"/>
+        <result property="pharmacyName" column="pharmacy_name"/>
+    </resultMap>
+
+    <!-- 회원가입 insert -->
+    <insert id="insertUser">
+        INSERT INTO user (username, password, name, phone, pharmacy_name, role)
+        VALUES (#{username}, #{password}, #{name}, #{phone}, #{pharmacyName}, 'USER')
+    </insert>
+
+    <!-- username 조회 -->
+    <select id="findByUsername" resultMap="UserMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
+    <!-- userId 조회 -->
+    <select id="findById" resultMap="UserMap">
+        SELECT * FROM user WHERE user_id = #{id}
+    </select>
+
+    <!-- 회원 정보 업데이트 (여기가 핵심 수정 부분) -->
+    <update id="update">
+        UPDATE user
+        SET
+            username = #{username},
+            name = #{name},
+            phone = #{phone},
+            pharmacy_name = #{pharmacyName},
+            role = #{role}
+        <if test="password != null and password != ''">
+            , password = #{password}
+        </if>
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

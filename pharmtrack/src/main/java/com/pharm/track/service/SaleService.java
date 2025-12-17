@@ -26,7 +26,7 @@ public class SaleService {
         int totalPrice = saleDto.getItems().stream()
                 .mapToInt(i -> i.getUnitPrice() * i.getQuantity())
                 .sum();
-
+        /**ㅇ왜 나만안돼**/
         Sale sale = new Sale();
         sale.setUserId(saleDto.getUserId());
         sale.setTotalPrice(totalPrice);

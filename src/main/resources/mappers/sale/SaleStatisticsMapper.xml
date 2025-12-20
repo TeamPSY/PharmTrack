@@ -1,35 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pharm.track.mapper.SaleStatisticsMapper">
 
-    <!-- ✅ 일별 매출 -->
-    <select id="findDailySales"
-            resultType="com.pharm.track.dtos.DailySalesDto">
-        SELECT
-            DATE(s.sale_date) AS date,
-            SUM(s.total_price) AS totalAmount
-        FROM sales s
-        WHERE s.sale_date BETWEEN #{startDate} AND #{endDate}
-        GROUP BY DATE(s.sale_date)
-        ORDER BY date
-    </select>
+  <!-- ✅ 일별 매출 통계 -->
+	 <select id="findDailySales"
+        parameterType="map"
+        resultType="com.pharm.track.dtos.DailySalesDto">
+		<![CDATA[
+		  SELECT
+		    DATE(s.sale_time) AS date,
+		    SUM(s.total_price) AS totalAmount
+		  FROM sale s
+		  WHERE s.sale_time >= #{startDate}
+		    AND s.sale_time < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+		  GROUP BY DATE(s.sale_time)
+		  ORDER BY DATE(s.sale_time)
+		]]>
+</select>
 
-    <!-- ✅ 약품별 판매 -->
-    <select id="findSalesByMedicine"
-            resultType="com.pharm.track.dtos.MedicineSalesDto">
-        SELECT
-            m.name AS medicineName,
-            SUM(sd.quantity) AS quantity,
-            SUM(sd.quantity * sd.price) AS totalAmount
-        FROM sale_detail sd
-        JOIN medicine m ON sd.medicine_id = m.medicine_id
-        JOIN sales s ON sd.sale_id = s.sale_id
-        WHERE s.sale_date BETWEEN #{startDate} AND #{endDate}
-        GROUP BY m.name
-        ORDER BY totalAmount DESC
-    </select>
+
+
+  <!-- ✅ 약품별 판매 통계 -->
+  <select id="findSalesByMedicine"
+          parameterType="map"
+          resultType="com.pharm.track.dtos.MedicineSalesDto">
+		    <![CDATA[
+		    SELECT
+		        m.name AS medicineName,
+		        SUM(sd.quantity) AS quantity,
+		        SUM(sd.quantity * m.price) AS totalAmount
+		    FROM sale_item sd
+		    JOIN sale s ON sd.sale_id = s.sale_id
+		    JOIN medicine m ON sd.medicine_id = m.medicine_id
+		    WHERE s.sale_time >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+		      AND s.sale_time < DATE_ADD(
+		            STR_TO_DATE(#{endDate}, '%Y-%m-%d'),
+		            INTERVAL 1 DAY
+		      )
+		    GROUP BY m.name
+		    ORDER BY totalAmount DESC
+		    ]]>
+  </select>
 
 </mapper>
